@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zenvita – Live Balanced</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+/* Toggle Button */
+.chat-toggle{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#1F3C88;
+  color:#fff;
+  font-size:1.5rem;
+  padding:12px;
+  border-radius:50%;
+  cursor:pointer;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
+  z-index:10000; /* 🔥 ADD THIS */  
+}
+
+@keyframes floatBot{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+  100%{transform:translateY(0);}
+}
+
+/* Chatbox */
+.chatbot{
+  position:fixed;
+  bottom:80px;
+  right:20px;
+  width:320px;
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.25);
+  overflow:hidden;
+  display:none;
+  z-index:9999; /* 🔥 ADD THIS */
+}
+
+/* Header */
+.chat-header{
+  background:#1F3C88;
+  color:#fff;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+/* Cute Robot Face */
+.robot-face{
+  display:flex;
+  gap:5px;
+  margin-right:5px;
+}
+
+.eye{
+  width:8px;
+  height:8px;
+  background:#fff;
+  border-radius:50%;
+  animation:blink 2s infinite;
+}
+
+@keyframes blink{
+  0%,90%,100%{transform:scaleY(1);}
+  95%{transform:scaleY(0.2);}
+}
+
+/* Chat Body */
+.chat-body{
+  height:220px;
+  overflow-y:auto;
+  padding:10px;
+  background:#f2f6fb;
+}
+
+.chat-body p{
+  margin:5px 0;
+}
+
+.bot{
+  color:#1F3C88;
+}
+
+.user{
+  text-align:right;
+}
+
+/* Input */
+.chat-input{
+  display:flex;
+}
+
+.chat-input input{
+  flex:1;
+  padding:8px;
+  border:none;
+}
+
+.chat-input button{
+  background:#1F3C88;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  cursor:pointer;
+}
+
+/* ========================== */
+/* 🔵 Circular Stats Section */
+/* ========================== */
+
+#statsSection {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(180deg, #e8f1ff 0%, #f6faff 100%);
+  border-radius: 30px;
+  margin: 3rem auto;
+}
+
+.stats-heading {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: #1F3C88;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3rem;
+}
+
+.circle-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circle {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.circle svg {
+  width: 150px;
+  height: 150px;
+  transform: rotate(-90deg);
+}
+
+.circle circle {
+  fill: none;
+  stroke-width: 12;
+  stroke: #dbe9ff;
+}
+
+.circle .progress {
+  stroke: #1F3C88;
+  stroke-linecap: round;
+  stroke-dasharray: 377;
+  stroke-dashoffset: 377;
+  transition: stroke-dashoffset 1.5s ease;
+  filter: drop-shadow(0 0 8px rgba(31,60,136,0.4));
+}
+
+.number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1F3C88;
+}
+
+.circle-card h3 {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: #1F3C88;
+}
+
+/* Hover Effect */
+.circle-card:hover .progress {
+  stroke: #163172;
+  filter: drop-shadow(0 0 15px rgba(31,60,136,0.6));
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-container {
+    gap: 2rem;
+  }
+}
+
+
+    :root {
+      --bg-light: #ffffff;
+      --bg-dark: #1F3C88;
+      --primary: #47466D;
+      --secondary: #1F3C88;
+      --light: var(--bg-light);
+      --dark: #000000;
+    }
+
+    body.dark {
+      --light: #1c1c1c;
+      --dark: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden; /* prevent horizontal page sliding */
+    }
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 2rem;
+      z-index: 2000;
+      transition: opacity 0.6s ease;
+    }
+
+    header {
+      background: #C8D9E6;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+<body>
+
+  <header>
+    <h1>Zenvita</h1>
+    <button onclick="openLogin()">Login</button>
+  </header>
+
+    .logo-text {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #1F3C88;
+    }
+
+    body.dark .logo-text {
+      color: #4da3ff;
+    }
+
+    nav a {
+      margin-left: 1.2rem;
+      text-decoration: none;
+      color: #1F3C88;
+      font-weight: 500;
+    }
+
+    .nav-btn {
+      margin-left: 1.5rem;
+      padding: 0.5rem 1.6rem;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 25px;
+      font-weight: 600;
+    }
+
+    .toggle {
+      margin-left: 1rem;
+      cursor: pointer;
+    }
+
+    .hero {
+      min-height: 90vh;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 4rem;
+      padding: 6rem 8% 6rem; /* slightly reduced bottom padding */
+      background: linear-gradient(180deg, #ffffff 0%, #f2f6fb 100%);
+      margin-bottom: 2.5rem; /* reduced gap before Features */
+    }
+    
+
+    .hero-text h2 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-btn {
+      display: inline-block;
+      margin-top: 1.8rem;
+      padding: 0.7rem 2.2rem;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    }
+
+    body.dark .hero-text h2,
+    body.dark .hero-text p {
+      color: #000;
+    }
+
+    .hero-visual {
+      position: relative;
+      width: 360px;
+      height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .center-display {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      font-size: 3rem;
+    }
+
+    .orbit {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      animation: rotate 20s linear infinite;
+    }
+
+    .orbit:hover {
+      animation-play-state: paused;
+    }
+
+    .orbit-item {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .orbit-item.heart { top: -10px; left: 50%; transform: translateX(-50%); }
+    .orbit-item.lungs { right: -10px; top: 50%; transform: translateY(-50%); }
+    .orbit-item.peace { bottom: -10px; left: 50%; transform: translateX(-50%); }
+    .orbit-item.kidney { left: -10px; top: 50%; transform: translateY(-50%); }
+    .orbit-item.bp { top: 10%; left: 10%; }
+    .orbit-item.diabetes { top: 10%; right: 10%; }
+    .orbit-item.thyroid { bottom: 10%; right: 10%; }
+    
+    .orbit-item.immunity {
+      bottom: 10%;
+      left: 10%;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    section {
+      padding: 4rem 2rem; /* slightly tighter vertical spacing */
+      max-width: 1100px;
+      margin: 0 auto 3rem;
+    }
+    
+
+    /* Features marquee */
+
+    .features-heading {
+      color: #1F3C88;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    body.dark .features-heading {
+      color: #000000;
+    }
+
+    .features-marquee {
+      overflow: hidden;
+      position: relative;
+      margin-top: 2.5rem;
+      width: 100%;
+    }
+
+    .features-track {
+      display: flex;
+      gap: 2rem;
+      animation: marquee 25s linear infinite;
+      width: max-content;
+    }
+
+    /* keep marquee scrolling even on hover */
+
+    .feature-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.8rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      min-width: 260px;
+      max-width: 260px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body.dark .feature-card {
+      background: #f2f5fb;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(46,204,113,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      color: var(--primary);
+    }
+
+    .feature-card h3 {
+      margin-bottom: 0.5rem;
+      color: #1F3C88;
+      font-size: 1.05rem;
+    }
+
+    body.dark .feature-card h3,
+    body.dark .feature-card p {
+      color: #000;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    footer {
+      background: #C8D9E6;
+      color: #1F3C88;
+      text-align: center;
+      padding: 1.5rem;
+      font-weight: 500;
+    }
+
+    /* Login Modal */
+    .login-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .login-box {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 18px;
+      width: 320px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+
+    .login-box h2 {
+      margin-bottom: 1.5rem;
+      color: #1F3C88;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 25px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .divider {
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    .google-btn {
+      background: #fff;
+      color: #444;
+      border: 1px solid #ddd;
+      margin-bottom: 1rem;
+    }
+
+    .signup-text {
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .signup-text a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    #welcomeMsg {
+  display: none;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #1F3C88;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  z-index: 4000;
+}
+ /* Zenvita stacked cards */
+
+.heal-container{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:0;
+margin-top:2rem;
+position:relative;
+}
+
+.heal-card{
+width:220px;
+height:260px;
+border-radius:20px;
+padding:1.5rem;
+color:#1F3C88;
+position:absolute;
+
+background:rgba(255,255,255,0.35);
+backdrop-filter:blur(12px);
+box-shadow:0 15px 40px rgba(0,0,0,0.15);
+
+transition:transform 0.4s ease, z-index 0.4s ease;
+cursor:pointer;
+}
+
+/* stacked positions */
+
+.card1{
+transform:rotate(-10deg) translateX(-140px);
+z-index:1;
+}
+
+.card2{
+transform:rotate(-3deg) translateX(-40px);
+z-index:2;
+}
+
+.card3{
+transform:rotate(5deg) translateX(60px);
+z-index:3;
+}
+
+.card4{
+transform:rotate(12deg) translateX(160px);
+z-index:4;
+}
+
+/* hover lift */
+
+.heal-card:hover{
+transform:scale(1.08) rotate(0deg);
+z-index:10;
+}
+
+/* image */
+
+.heal-card img{
+width:80px;
+height:80px;
+border-radius:12px;
+object-fit:cover;
+margin-bottom:10px;
+}
+
+/* title */
+
+.heal-card h3{
+margin-bottom:8px;
+}
+ 
+/* Warning icon animation */
+
+.warning-icon{
+  display:inline-block;
+  margin-right:8px;
+  animation:pulseWarning 1.2s infinite;
+}
+
+@keyframes pulseWarning{
+  0%{ transform:scale(1); opacity:1; }
+  50%{ transform:scale(1.3); opacity:0.7; }
+  100%{ transform:scale(1); opacity:1; }
+}
+
+/* Improve title alignment */
+
+.disclaimer-title{
+  display:flex;
+  align-items:center;
+  color:#e74c3c;
+}
+
+  </style>
+</head>
+<body>
+
+<div id="loader">Zenvita 🌿</div>
+
+<header>
+  <h1 class="logo-text">Zenvita</h1>
+  <nav id="nav">
+    <a href="#">Home</a>
+    <a href="#features">Features</a>
+    <a href="#heal">Heal</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a href="#login" class="nav-btn">Login</a>
+    <span class="toggle" id="themeToggle">☀️</span>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="hero-text">
+    <h2>Live Calm. Live Healthy.</h2>
+    <p>Zenvita helps you find balance through mindfulness and wellness.</p>
+    <a href="#features" class="hero-btn">Explore</a>
+  </div>   <!-- hero ends -->
+
+
+  <div class="hero-visual">
+    <div class="center-display" id="centerDisplay"></div>
+    <div class="orbit">
+      <div class="orbit-item heart">🫀</div>
+      <div class="orbit-item lungs">🫁</div>
+      <div class="orbit-item peace">🧘</div>
+      <div class="orbit-item kidney">🫘</div>
+      <div class="orbit-item bp">🩸</div>
+      <div class="orbit-item diabetes">🍬</div>
+      <div class="orbit-item thyroid">🧬</div>
+      
+      <div class="orbit-item immunity">🛡️</div>
+    </div>
+  </div>
+</div>
+
+<section id="features" style="background:#f8fafc; border-radius: 32px; padding: 4rem 2.5rem;">
+  <h2 class="features-heading">Features</h2>
+  <div class="features-marquee">
+    <div class="features-track">
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(231,76,60,0.15); color:#E74C3C;">❤</div>
+        <h3>Personalized Care</h3>
+        <p>Wellness guidance tailored to your body and mind.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🧘</div>
+        <h3>Mindfulness</h3>
+        <p>Tools to reduce stress and improve focus.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Health Tracking</h3>
+        <p>Monitor habits and long-term progress.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🫀</div>
+        <h3>Heart Health</h3>
+        <p>Support for cardiovascular wellness.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Mental Balance</h3>
+        <p>Emotional resilience and mental clarity.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>Global Research</h3>
+        <p>Insights backed by worldwide health data.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🩺</div>
+        <h3>Preventive Care</h3>
+        <p>Early insights to prevent long-term illness.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Progress Insights</h3>
+        <p>Visualize improvements over time.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>Community Support</h3>
+        <p>Connect with people on similar wellness journeys.</p>
+      </div>
+
+      <!-- duplicate for seamless loop -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(231,76,60,0.15); color:#E74C3C;">❤</div>
+        <h3>Personalized Care</h3>
+        <p>Wellness guidance tailored to your body and mind.</p>
+      </div>
+    </div>
+  </div>
+
+<br>
+<br>
+<br>
+</section>
+<h1><center>Heal</center></h1>
+
+  <section id="heal" style="text-align:center; padding:4rem 2rem;">
+
+<h2 style="color:#1F3C88;">Zenvita Promise</h2>
+
+<div class="heal-container">
+
+<div class="heal-card card1">
+<img src="https://images.unsplash.com/photo-1584515933487-779824d29309">
+<h3>Health Awareness</h3>
+<p>Understand diseases and symptoms easily.</p>
+</div>
+
+<div class="heal-card card2">
+<img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352">
+<h3>Healthy Lifestyle</h3>
+<p>Food and habits for better health.</p>
+</div>
+
+<div class="heal-card card3">
+<img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322">
+<h3>Disease Prevention</h3>
+<p>Learn early warning signs.</p>
+</div>
+
+<div class="heal-card card4">
+<img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773">
+<h3>Wellness Guidance</h3>
+<p>Balance your body and mind.</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="about" style="text-align: center;">
+  <h2>Diseases List Screen</h2>
+  <div class="disease-list" style="margin-top:2rem; display:flex; flex-wrap:wrap; gap:1rem; justify-content:center;">
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/diabe.html' " class="nav-btn">Diabetes</button></a>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/heart.html' "  class="nav-btn">Heart Disease</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/Blood Pressure.html' " class="nav-btn">Blood Pressure</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/Obesity.html' "  class="nav-btn">Obesity</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/Anemia.html' " class="nav-btn">Anemia</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/Digestive Issues.html' " class="nav-btn">Digestive Issues</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/Cancer.html' "class="nav-btn">Cancer</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/kidneydisease.html' " class="nav-btn">Kidney Disease</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/Stress.html' "class="nav-btn">Stress</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/thyroid.html' "class="nav-btn">Thyroid</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/Diet.html' "class="nav-btn">Diet</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/skin disease.html' "class="nav-btn">Skin Disease</button>
+    <button Onclick="window.location.href='file:///C:/Users/mjptb/OneDrive/Desktop/yshucs/Hangover.html' "class="nav-btn">Hangover</button>
+  </div>
+</section> 
+
+
+<!-- Circular Stats Section -->
+<section id="statsSection">
+  <h2 class="stats-heading">Why Zenvita Matters</h2>
+
+  <div class="stats-container">
+
+    <div class="circle-card">
+      <div class="circle" data-percent="92">
+        <svg>
+          <circle cx="70" cy="70" r="60"></circle>
+          <circle cx="70" cy="70" r="60" class="progress"></circle>
+        </svg>
+        <div class="number">0%</div>
+      </div>
+      <h3>Website Importance</h3>
+    </div>
+
+    <div class="circle-card">
+      <div class="circle" data-percent="87">
+        <svg>
+          <circle cx="70" cy="70" r="60"></circle>
+          <circle cx="70" cy="70" r="60" class="progress"></circle>
+        </svg>
+        <div class="number">0%</div>
+      </div>
+      <h3>Health Helpfulness</h3>
+    </div>
+
+    <div class="circle-card">
+      <div class="circle" data-percent="95">
+        <svg>
+          <circle cx="70" cy="70" r="60"></circle>
+          <circle cx="70" cy="70" r="60" class="progress"></circle>
+        </svg>
+        <div class="number">0%</div>
+      </div>
+      <h3>Knowledge Awareness</h3>
+    </div>
+
+  </div>
+</section>  
+
+<section style="text-align:center; padding:3rem 2rem; max-width:900px; margin:auto;">
+
+<h2 style="color:#1F3C88; margin-bottom:1rem;">About Zenvita</h2>
+
+<p style="font-size:1.05rem; line-height:1.8; color:#444;">
+Zenvita is a health-focused platform developed through continuous research and study of various diseases and nutrition. 
+This website is built with the aim of providing clear and reliable information about health conditions and the right food choices. 
+Our research combines knowledge about diseases and diet to help people better understand their bodies. 
+Through Zenvita, users can learn how proper food habits and awareness can improve overall wellbeing. 
+The platform is designed to support individuals in maintaining their health in the best possible way. 
+Zenvita stands as a simple and informative guide to help people live a healthier and more balanced life.
+</p>
+
+</section> 
+<section class="medical-disclaimer">
+  <h2 class="disclaimer-title">
+    <span class="warning-icon">⚠️</span> Medical Disclaimer
+  </h2>
+
+  <p>
+    The information provided on Zenvita is for general educational and informational purposes only. 
+    It is not intended to replace professional medical advice, diagnosis, or treatment. 
+    Individuals who are experiencing multiple health conditions or serious medical issues should not rely solely on this website. 
+    We strongly recommend consulting a qualified healthcare professional or doctor for proper guidance and treatment. 
+    Always seek the advice of your physician before making any health-related decisions.
+<br>
+<h2><center>FROM ZENVITA TEAM </center></h2>
+  </p>
+</section>
+<section id="contact">
+  <h2>Stay Healthy</h2>
+  <p>Stay informed, stay active, and stay mindful. Zenvita encourages healthy habits that support both body and mind.</p>
+</section> 
+<footer>© 2025 Zenvita</footer>
+
+<script>
+function toggleChat(){
+  const bot = document.getElementById("chatbot");
+  bot.style.display = bot.style.display === "block" ? "none" : "block";
+}
+function sendMessage(){
+  const input = document.getElementById("userInput");
+  const chatBody = document.getElementById("chatBody");
+
+  let text = input.value.toLowerCase();
+  if(text==="") return;
+
+  chatBody.innerHTML += `<p class="user"><b>You:</b> ${input.value}</p>`;
+
+  let reply = "I can help with diabetes, heart, BP, diet, and health tips 😊";
+
+  if(text.includes("diabetes")){
+    reply = "🥗 Eat low sugar foods, exercise daily, and monitor glucose.";
+  }
+  else if(text.includes("heart")){
+    reply = "❤️ Reduce oil, walk daily, and avoid stress.";
+  }
+  else if(text.includes("bp")){
+    reply = "🧂 Reduce salt, sleep well, and stay calm.";
+  }
+  else if(text.includes("diet")){
+    reply = "🥗 Eat balanced meals with fruits, vegetables, and protein.";
+  }
+  else if(text.includes("stress")){
+    reply = "🧘 Practice meditation and take breaks.";
+  }
+  else if(text.includes("obesity")){
+  reply = "⚖️ Follow a calorie-controlled diet, avoid junk food, exercise regularly, and stay active daily.";
+}
+
+else if(text.includes("anemia")){
+  reply = "🩸 Eat iron-rich foods like spinach and dates, include vitamin C, and avoid tea/coffee after meals.";
+}
+
+else if(text.includes("digestive")){
+  reply = "🍽️ Eat fiber-rich foods, drink plenty of water, avoid spicy food, and maintain regular meal timing.";
+}
+
+else if(text.includes("cancer")){
+  reply = "🧬 Eat antioxidant-rich foods, avoid smoking, maintain a healthy weight, and go for regular screenings.";
+}
+
+else if(text.includes("kidney")){
+  reply = "🫘 Drink enough water, reduce salt intake, avoid processed foods, and monitor blood pressure.";
+}
+
+else if(text.includes("skin")){
+  reply = "✨ Stay hydrated, eat fruits and vegetables, avoid oily foods, and maintain proper hygiene.";
+}
+
+else if(text.includes("hangover")){
+  reply = "🥤 Drink plenty of water, eat light foods, rest well, and avoid alcohol until fully recovered.";
+}
+  // Typing animation
+  setTimeout(()=>{
+    chatBody.innerHTML += `<p class="bot"><b>Bot:</b> ${reply}</p>`;
+    chatBody.scrollTop = chatBody.scrollHeight;
+  },500);
+
+  input.value="";
+}
+ 
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const center = document.getElementById('centerDisplay');
+    const orbitItems = document.querySelectorAll('.orbit-item');
+
+    if (orbitItems.length > 0) {
+      center.innerHTML = orbitItems[0].innerHTML;
+    }
+
+    // Automatic center rotation (no hover needed)
+    let index = 0;
+    setInterval(() => {
+      center.innerHTML = orbitItems[index].innerHTML;
+      index = (index + 1) % orbitItems.length;
+    }, 2000);
+
+    const loader = document.getElementById('loader');
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      setTimeout(() => loader.style.display = 'none', 600);
+    }, 300);
+
+    const toggle = document.getElementById('themeToggle');
+    toggle.textContent = document.body.classList.contains('dark') ? '🌙' : '☀️';
+
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      toggle.textContent = document.body.classList.contains('dark') ? '🌙' : '☀️';
+    });
+
+    const loginBtn = document.querySelector('.nav-btn');
+    const loginModal = document.getElementById('loginModal');
+
+    loginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginModal.style.display = 'flex';
+    });
+
+    loginModal.addEventListener('click', (e) => {
+      if (e.target === loginModal) loginModal.style.display = 'none';
+    });
+  });
+
+// Circular Progress Animation
+const circles = document.querySelectorAll(".circle");
+
+circles.forEach(circle => {
+  const percent = circle.getAttribute("data-percent");
+  const progress = circle.querySelector(".progress");
+  const number = circle.querySelector(".number");
+
+  const radius = 60;
+  const circumference = 2 * Math.PI * radius;
+
+  progress.style.strokeDasharray = circumference;
+  progress.style.strokeDashoffset = circumference;
+
+  let count = 0;
+  const interval = setInterval(() => {
+    if (count >= percent) {
+      clearInterval(interval);
+    } else {
+      count++;
+      number.textContent = count + "%";
+      progress.style.strokeDashoffset =
+        circumference - (count / 100) * circumference;
+    }
+  }, 20);
+});
+
+
+</script>
+<!-- 🤖 Chatbot Button -->
+<div class="chat-toggle" onclick="toggleChat()">🤖</div>
+
+<!-- 💬 Chatbot Box -->
+<div class="chatbot" id="chatbot">
+
+  <div class="chat-header">
+    <div class="robot-face">
+      <div class="eye"></div>
+      <div class="eye"></div>
+    </div>
+    Zenvita AI
+    <span onclick="toggleChat()" style="cursor:pointer;">✖</span>
+  </div>
+
+  <div class="chat-body" id="chatBody">
+    <p class="bot">Hi! I’m Zenvita AI 🤖<br>Ask me about health tips!</p>
+  </div>
+
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Ask health tips..." />
+    <button onclick="sendMessage()">➤</button>
+  </div>
+
+</div>
+<script>
+function openLogin() {
+  document.getElementById("loginModal").style.display = "flex";
+}
+
+function showWelcome() {
+  document.getElementById("loginModal").style.display = "none";
+  document.getElementById("welcomeMsg").style.display = "block";
+}
+</script>
+  <!-- Login Modal -->
+  <div class="login-modal" id="loginModal">
+    <div class="login-box">
+      <h2>Login to Zenvita</h2>
+
+      <input type="text" placeholder="Username">
+      <input type="password" placeholder="Password">
+
+      <button onclick="showWelcome()">Login</button>
+    </div>
+  </div>
+
+  <!-- Welcome Message -->
+  <div id="welcomeMsg">
+    Welcome to Zenvita – your family of zen information
+  </div>
+</script>
+<script>
+document.addEventListener("click", function(event) {
+  const msg = document.getElementById("welcomeMsg");
+
+  // Only run if message is visible
+  if (msg.style.display === "block") {
+    
+    // If click is NOT on message AND NOT on login button
+    if (!msg.contains(event.target) && !event.target.closest("button")) {
+      msg.style.display = "none";
+    }
+  }
+});
+</script>
+</body>
+</html>
+
